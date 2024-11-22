@@ -80,6 +80,7 @@ class CreateLivro : AppCompatActivity() {
             // Get the image URI and display it
             val imageUri: Uri? = data?.data
             imageUri?.let { uri ->handleImageUri(uri)
+                binding.img1.setImageURI(uri)
 
             }
         }
