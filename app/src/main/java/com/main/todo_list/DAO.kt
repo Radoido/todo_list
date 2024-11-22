@@ -6,17 +6,42 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DBlivro(context: Context) : SQLiteOpenHelper(context, "livro.db", null, 1) {
+class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1) {
 
-    val sql = "CREATE TABLE livro(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, autor TEXT)"
+    val sql = arrayOf("CREATE TABLE livro(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, autor TEXT)",
+            "create table cliente(id integer primary key autoincrement, nome text,cpf integer, email text)")
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(sql)
+        sql.forEach {
+            db.execSQL(it)
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS tarefa")
-        onCreate(db)
+        val sql = arrayOf("DROP TABLE IF EXISTS livro", "DROP TABLE IF EXISTS cliente")
+        sql.forEach {
+            db.execSQL(it)
+        }
+    }
+
+    fun livroInsert(titulo: String, autor: String) : Long{
+        val db = writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("titulo", titulo)
+        contentValues.put("autor", autor)
+        val resultado = db.insert("livro", null, contentValues)
+        db.close()
+        return resultado
+    }
+    fun clienteInsert(nome: String, cpf: Int, email: String) : Long{
+        val db = writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("nome", nome)
+        contentValues.put("cpf", cpf)
+        contentValues.put("email", email)
+        val resultado = db.insert("cliente", null, contentValues)
+        db.close()
+        return resultado
     }
 
 
@@ -27,10 +52,10 @@ class DBlivro(context: Context) : SQLiteOpenHelper(context, "livro.db", null, 1)
         val listaLivros: ArrayList<Livro> = ArrayList()
         if (sql.moveToFirst()) {
             do {
-                val id = sql.getInt(sql.getColumnIndex("id"))
-                val titulo = sql.getString(sql.getColumnIndex("titulo"))
-                val autor = sql.getString(sql.getColumnIndex("autor"))
-                listaLivros.add(Livro(id, titulo, autor))
+                    val id = sql.getInt(sql.getColumnIndex("id"))
+                    val titulo = sql.getString(sql.getColumnIndex("titulo"))
+                    val autor = sql.getString(sql.getColumnIndex("autor"))
+                    listaLivros.add(Livro(id, titulo, autor))
             } while (sql.moveToNext())
         }
         return listaLivros
@@ -72,15 +97,7 @@ class DBlivro(context: Context) : SQLiteOpenHelper(context, "livro.db", null, 1)
     }
 
 
-    fun livroInsert(titulo: String, autor: String) : Long{
-        val db = writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put("titulo", titulo)
-        contentValues.put("autor", autor)
-        val resultado = db.insert("livro", null, contentValues)
-        db.close()
-        return resultado
-    }
+
 
     fun livroUpdate(id: Int ,titulo: String, autor: String) : Int {
         val db = writableDatabase

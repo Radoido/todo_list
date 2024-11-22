@@ -4,8 +4,7 @@
 
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
-        android:maxSdkVersion="35"/>
-
+        android:maxSdkVersion="35" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -20,11 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Todo_list"
         tools:targetApi="31">
-
+        <activity
+            android:name=".CreateCliente"
+            android:exported="false" />
         <activity
             android:name=".CreateLivro"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -34,9 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
-
-
 
 </manifest>

@@ -3,10 +3,7 @@ package com.main.todo_list
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.main.todo_list.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.main)
 
-        val db = DBlivro(this)
+        val db = DAO(this)
         val listaLivros = ArrayList<Livro>()
 
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaLivros)
