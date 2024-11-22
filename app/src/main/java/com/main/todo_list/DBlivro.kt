@@ -1,5 +1,6 @@
 package com.main.todo_list
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -19,53 +20,57 @@ class DBlivro(context: Context) : SQLiteOpenHelper(context, "livro.db", null, 1)
     }
 
 
-
-    fun livrosMostrarTodos():  ArrayList<Livro>{
+    @SuppressLint("Range")
+    fun livrosMostrarTodos(): ArrayList<Livro> {
         val db = readableDatabase
-        val sql = db.rawQuery("SELECT titulo, autor FROM tarefa", null)
-        val listaLivros : ArrayList<Livro> = ArrayList()
+        val sql = db.rawQuery("SELECT titulo, autor FROM livro", null)
+        val listaLivros: ArrayList<Livro> = ArrayList()
         if (sql.moveToFirst()) {
             do {
                 val id = sql.getInt(sql.getColumnIndex("id"))
                 val titulo = sql.getString(sql.getColumnIndex("titulo"))
                 val autor = sql.getString(sql.getColumnIndex("autor"))
                 listaLivros.add(Livro(id, titulo, autor))
-            }while (sql.moveToNext())
+            } while (sql.moveToNext())
         }
         return listaLivros
     }
 
-    fun livrosPorAutor(autor: String) : ArrayList<Livro>{
+    @SuppressLint("Range")
+    fun livrosPorAutor(autor: String): ArrayList<Livro> {
         val db = readableDatabase
-        val sql = db.rawQuery("SELECT titulo, autor FROM tarefa WHERE autor LIKE ?", arrayOf(autor))
-        val listaLivros : ArrayList<Livro> = ArrayList()
+        val sql = db.rawQuery("SELECT titulo, autor FROM livro WHERE autor LIKE ?", arrayOf(autor))
+        val listaLivros: ArrayList<Livro> = ArrayList()
         if (sql.moveToFirst()) {
             do {
                 val id = sql.getInt(sql.getColumnIndex("id"))
                 val titulo = sql.getString(sql.getColumnIndex("titulo"))
                 val autor = sql.getString(sql.getColumnIndex("autor"))
                 listaLivros.add(Livro(id, titulo, autor))
-            }while (sql.moveToNext())
+            } while (sql.moveToNext())
         }
         return listaLivros
     }
 
-    fun livrosPorTitulo(titulo: String) : ArrayList<Livro> {
+    @SuppressLint("Range")
+    fun livrosPorTitulo(titulo: String): ArrayList<Livro> {
         val db = readableDatabase
-        val sql = db.rawQuery("SELECT titulo, autor FROM tarefa WHERE titulo LIKE ?", arrayOf(id.toString()))
-        val listaLivros : ArrayList<Livro> = ArrayList()
+        val sql = db.rawQuery(
+            "SELECT titulo, autor FROM livro WHERE titulo LIKE ?",
+            arrayOf(titulo)
+        )
+        val listaLivros: ArrayList<Livro> = ArrayList()
         if (sql.moveToFirst()) {
             do {
                 val id = sql.getInt(sql.getColumnIndex("id"))
                 val titulo = sql.getString(sql.getColumnIndex("titulo"))
                 val autor = sql.getString(sql.getColumnIndex("autor"))
                 listaLivros.add(Livro(id, titulo, autor))
-            }while (sql.moveToNext())
+            } while (sql.moveToNext())
         }
-         return listaLivros
-        }
-        return livro
+        return listaLivros
     }
+
 
     fun livroInsert(titulo: String, autor: String) : Long{
         val db = writableDatabase
@@ -90,7 +95,7 @@ class DBlivro(context: Context) : SQLiteOpenHelper(context, "livro.db", null, 1)
 
     fun livroDelete(id: Int) : Int {
         val db = writableDatabase
-        val resultado = db.delete("livro", "titulo = ?", arrayOf(titulo))
+        val resultado = db.delete("livro", "titulo = ?", arrayOf(id.toString()))
         db.close()
         return resultado
     }
