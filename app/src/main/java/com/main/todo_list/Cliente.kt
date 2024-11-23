@@ -1,9 +1,9 @@
 package com.main.todo_list
 
-class Cliente (var nome: String = "",val cpf: Int = 0, var email: String){
+class Cliente (var id: Int = 0, var nome: String = "", var email: String, var alugados: ArrayList<Livro> = ArrayList()){
 
     override fun toString(): String {
-        return "$cpf - $nome - $email"
+        return "$id. $nome - $email"
 
     }
 

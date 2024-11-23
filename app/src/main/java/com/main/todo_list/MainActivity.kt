@@ -1,6 +1,7 @@
 package com.main.todo_list
 
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +20,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.main)
 
         val db = DAO(this)
-        val listaLivros = ArrayList<Livro>()
+        val listaLivros = db.mostrarTodosLivros()
+        if (listaLivros.isEmpty()) {
+            binding.txtId.text = "ID: Nenhum livro cadastrado"
+        }
 
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaLivros)
         binding.listItem.adapter = adapter
@@ -51,9 +55,10 @@ class MainActivity : AppCompatActivity() {
 
             val intent = Intent(this, CreateLivro::class.java)
             startActivity(intent)
+        }
 
+        binding.btnDelete.setOnClickListener{
 
-
-
-        }}
+        }
+    }
 }
