@@ -2,7 +2,9 @@ package com.main.todo_list
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -46,7 +48,35 @@ class CreateCliente : AppCompatActivity() {
                 binding.editEmail.setText("")
                 binding.txtId.text = "ID: "
 
+            }else{
+                Toast.makeText(this, "Insira o nome e email do cliente", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.btnEditar.setOnClickListener(){
+            val idString = binding.txtId.text.toString()
+            val id = idString.substringAfter("ID: ").toIntOrNull()
+            val nome = binding.editNome.text.toString()
+            val email = binding.editEmail.text.toString()
+
+            if (id == null) {
+                Toast.makeText(this, "Selecione um cliente para editar", Toast.LENGTH_SHORT).show()
+            } else if (nome.isBlank() || email.isBlank()) {
+                Toast.makeText(this, "Nome e email não podem estar vazios", Toast.LENGTH_SHORT).show()
+            } else {
+                // Chama a função de atualização passando os valores
+                val resultado = db.clienteUpdate(id, nome, email)
+
+                if (resultado > 0) {
+                    listaClientes[id] = Cliente(id,nome, email)
+                    adapter.notifyDataSetChanged()
+                    Toast.makeText(this, "Cliente atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Erro ao atualizar o cliente", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
         }
 
         binding.btnCancelar.setOnClickListener {
@@ -54,6 +84,7 @@ class CreateCliente : AppCompatActivity() {
             binding.editEmail.setText("")
             val intent = Intent(this, Menu::class.java)
             startActivity(intent)
+            finish()
         }
 
     }

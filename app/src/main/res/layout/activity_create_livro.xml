@@ -88,14 +88,22 @@
             android:id="@+id/btnSalvar"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:text="Salvar"
-            android:layout_marginRight="10dp"/>
+            android:text="Salvar" />
+
+        <Button
+            android:id="@+id/btnEditar"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="Editar"/>
 
         <Button
             android:id="@+id/btnCancelar"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Cancelar"/>
+
+
 
 
     </LinearLayout>

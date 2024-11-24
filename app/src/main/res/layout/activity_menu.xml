@@ -9,45 +9,75 @@
     tools:context=".Menu"
     android:gravity="center">
 
-    <TextView
-        android:id="@+id/textMenu"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="50dp"
-        android:gravity="center_horizontal"
-        android:text="Menu"
-        android:layout_marginVertical="20dp"/>
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <Button
-        android:id="@+id/btnTeste"
+        <TextView
+            android:id="@+id/txtBemVindo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Usuario"
+            android:layout_marginVertical="5dp"/>
+
+        <TextView
+            android:id="@+id/txtCargo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Cargo"/>
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/linearMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:text="area de teste"
-        android:layout_marginHorizontal="20dp"
-        android:gravity="center"
-        android:layout_marginTop="150px"
-        />
+        android:orientation="vertical"
+        android:layout_marginVertical="60dp">
+
+        <TextView
+            android:id="@+id/textMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:gravity="center_horizontal"
+            android:text="Menu"
+            android:layout_marginVertical="20dp"/>
+
+        <Button
+            android:id="@+id/btnListaAluguel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Livros" />
+
+
+        <Button
+            android:id="@+id/btnLivro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Alugar livro" />
+
+        <Button
+            android:id="@+id/btnCadCliente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gerenciar cliente" />
+
+        <Button
+            android:id="@+id/btnCadLivro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gerenciar livro" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/btnCliente"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:text="Cadastro cliente"
-        android:layout_marginHorizontal="20dp"/>
-
-    <Button
-        android:id="@+id/btnLivro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="70dp"
-        android:text="Cadastro livro"
-        android:layout_marginHorizontal="20dp"/>
-
-    <Button
-        android:id="@+id/btnOut"
+        android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LOGOUT"

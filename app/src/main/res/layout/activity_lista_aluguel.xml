@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lista_aluguel"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ListaAluguel">
+
+    <!-- activity_filtrar_livros.xml -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <!-- Filtros de Livro -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnTodos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Todos" />
+
+            <Button
+                android:id="@+id/btnDisponiveis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disponíveis" />
+
+            <Button
+                android:id="@+id/btnAlugados"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alugados" />
+        </LinearLayout>
+
+        <!-- ListView para exibir os livros -->
+        <ListView
+            android:id="@+id/listLivros"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+
+</LinearLayout>
