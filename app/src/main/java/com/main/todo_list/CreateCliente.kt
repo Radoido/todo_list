@@ -63,6 +63,8 @@ class CreateCliente : AppCompatActivity() {
                 Toast.makeText(this, "Selecione um cliente para editar", Toast.LENGTH_SHORT).show()
             } else if (nome.isBlank() || email.isBlank()) {
                 Toast.makeText(this, "Nome e email não podem estar vazios", Toast.LENGTH_SHORT).show()
+            } else if (nome == listaClientes[id].nome && email == listaClientes[id].email) {
+                Toast.makeText(this, "Altere as informações que deseja atualizar!", Toast.LENGTH_SHORT).show()
             } else {
                 // Chama a função de atualização passando os valores
                 val resultado = db.clienteUpdate(id, nome, email)
@@ -70,13 +72,20 @@ class CreateCliente : AppCompatActivity() {
                 if (resultado > 0) {
                     listaClientes[id] = Cliente(id,nome, email)
                     adapter.notifyDataSetChanged()
+
                     Toast.makeText(this, "Cliente atualizado com sucesso!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Erro ao atualizar o cliente", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
 
-
+        binding.btnExcluir.setOnClickListener{
+            val idString = binding.txtId.text.toString()
+            val id = idString.substringAfter("ID: ").toIntOrNull()
+            val nome = binding.editNome.text.toString()
+            db.clienteDelete(id!!)
+            Toast.makeText(this, "O cliente $nome foi excluido com sucesso!", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnCancelar.setOnClickListener {
@@ -88,4 +97,7 @@ class CreateCliente : AppCompatActivity() {
         }
 
     }
+
+
+
 }

@@ -16,23 +16,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.main.todo_list.databinding.ActivityCreateLivroBinding
-import com.main.todo_list.databinding.ActivityMainBinding
 import java.io.File
 import java.io.FileOutputStream
-import com.main.todo_list.databinding.ActivityCreateLivroBinding
 
 class CreateLivro : AppCompatActivity() {
     private var imgUri: Uri? = null
-    private var titulo: String? = null
-    private var author: String? = null
     private var onImageSelected: ((Uri?) -> Unit)? = null
 
-    private val PICK_IMAGE_REQUEST = 1
-    private val REQUEST_MEDIA_PERMISSION = 1001
 
     private lateinit var binding: ActivityCreateLivroBinding
     private lateinit var adapter: ArrayAdapter<Livro>
-    private var p: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +44,14 @@ class CreateLivro : AppCompatActivity() {
             binding.editTitulo.setText(listaLivros[position].titulo)
             binding.editAutor.setText(listaLivros[position].autor)
             binding.txtId.text = "ID: ${listaLivros[position].id}"
-            p = position
         }
 
         binding.btnSalvar.setOnClickListener {
             val titulo = binding.editTitulo.text.toString()
             val autor = binding.editAutor.text.toString()
-            val resultado = db.livroInsert(titulo, autor)
+            val uriImagem = imgUri?.toString() ?: "android.resource://${packageName}/${R.drawable.placeholder}"
+
+            val resultado = db.livroInsert(titulo, autor, uriImagem)
 
             if (resultado > 0) {
                 listaLivros.add(Livro(resultado.toInt(), titulo, autor))
@@ -82,32 +76,41 @@ class CreateLivro : AppCompatActivity() {
             } else if (titulo.isBlank() || autor.isBlank()) {
                 Toast.makeText(this, "Título e autor não podem estar vazios", Toast.LENGTH_SHORT)
                     .show()
+            } else if (titulo == listaLivros[id].titulo && autor == listaLivros[id].autor) {
+                Toast.makeText(this, "Altere as informações que deseja atualizar!", Toast.LENGTH_SHORT).show()
             } else {
                 // Chama a função de atualização passando os valores
                 val resultado = db.livroUpdate(id, titulo, autor)
-                adapter.notifyDataSetChanged()
+
                 if (resultado > 0) {
                     listaLivros[id] = Livro(id, titulo, autor)
+                    adapter.notifyDataSetChanged()
 
                     Toast.makeText(this, "Livro atualizado com sucesso!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Erro ao atualizar o livro", Toast.LENGTH_SHORT).show()
                 }
             }
-
-
         }
 
-        binding.btnImg.setOnClickListener {
+        binding.btnExcluir.setOnClickListener{
+            val idString = binding.txtId.text.toString()
+            val id = idString.substringAfter("ID: ").toIntOrNull()
+            val titulo = binding.editTitulo.text.toString()
+            db.livroDelete(id!!)
+            Toast.makeText(this, "O livro $titulo foi excluido com sucesso!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnImagem.setOnClickListener {
             checkMediaPermission { selectedUri ->
                 if (selectedUri != null) {
-                    binding.btnImg.setImageURI(selectedUri)
+                    binding.btnImagem.setImageURI(selectedUri)
                     println("Imagem salva em: $selectedUri")
                 } else {
                     println("Nenhuma imagem foi selecionada.")
+
                 }
             }
-            checkMediaPermission()
         }
 
 
@@ -122,7 +125,10 @@ class CreateLivro : AppCompatActivity() {
 
     }
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { handleImageUri(it) }  // Processa a URI da imagem selecionada
+        uri?.let {
+            handleImageUri(it)
+            onImageSelected?.invoke(it)
+        }  // Processa a URI da imagem selecionada
     }
 
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -152,8 +158,6 @@ class CreateLivro : AppCompatActivity() {
 
     private fun openImagePicker() {
         imagePickerLauncher.launch("image/*")  // Abre a galeria para selecionar imagens
-        uri?.let { handleImageUri(it) }
-        onImageSelected?.invoke(imgUri)
     }
 
     private fun handleImageUri(uri: Uri) {

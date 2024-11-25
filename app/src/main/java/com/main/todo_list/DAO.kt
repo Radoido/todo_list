@@ -226,6 +226,34 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
         return listaLivros
     }
 
+    fun buscarLivroPorId(id: Int): Livro? {
+        val db = readableDatabase
+        val cursor = db.query("livro", null, "id = ?", arrayOf(id.toString()), null, null, null)
+
+        var livro: Livro? = null
+        if (cursor.moveToFirst()) {
+            livro = Livro(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                titulo = cursor.getString(cursor.getColumnIndexOrThrow("titulo")),
+                autor = cursor.getString(cursor.getColumnIndexOrThrow("autor")),
+                alugado = cursor.getInt(cursor.getColumnIndexOrThrow("alugado")),
+                imgUri = cursor.getString(cursor.getColumnIndexOrThrow("imgUri"))
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return livro
+    }
+
+    fun atualizarImagemLivro(id: Int, novaUri: String) {
+        val dao = writableDatabase
+        val values = ContentValues().apply {
+            put("img_uri", novaUri)
+        }
+        dao.update("livro", values, "id = ?", arrayOf(id.toString()))
+    }
+
 //Funções aluguel
     fun alugarLivro(idLivro: Int, idCliente: Int) {
         val db = writableDatabase
@@ -281,33 +309,53 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
     }
 
     //Funções CRUD funcionarios
-    fun funcionarioInsert(funcionario: Funcionario) {
+    fun funcionarioInsert(nome: String, senha: String, cargo: String) : Long {
         val db = writableDatabase
         val values = ContentValues()
 
-        values.put("nome", funcionario.nome)
-        values.put("senha", funcionario.senha)
-        values.put("cargo", funcionario.cargo)
+        values.put("nome", nome)
+        values.put("senha", senha)
+        values.put("cargo", cargo)
 
-        db.insert("funcionarios", null, values)
+        val resultado = db.insert("funcionarios", null, values)
         db.close()
+        return resultado
     }
 
-    fun funcionarioUpdate(id: Int ,nome: String, email: String) : Int {
+    fun funcionarioUpdate(id: Int ,nome: String, cargo: String, senha: String) : Int {
         val db = writableDatabase
         val contentValues = ContentValues()
-        contentValues.put("titulo", nome)
-        contentValues.put("autor", email)
-        val resultado = db.update("cliente", contentValues, "id = ?", arrayOf(id.toString()))
+        contentValues.put("nome", nome)
+        contentValues.put("cargo", cargo)
+        contentValues.put("senha", senha)
+        val resultado = db.update("funcionario", contentValues, "id = ?", arrayOf(id.toString()))
         db.close()
         return resultado
     }
 
     fun funcionarioDelete(id: Int) : Int {
         val db = writableDatabase
-        val resultado = db.delete("cliente", "id = ?", arrayOf(id.toString()))
+        val resultado = db.delete("funcionario", "id = ?", arrayOf(id.toString()))
         db.close()
         return resultado
+    }
+
+    fun mostrarTodosFuncionarios(): ArrayList<Funcionario> {
+        val db = readableDatabase
+        val sql = db.rawQuery("SELECT id, nome, cargo FROM funcionarios", null)
+        val listaFuncionarios: ArrayList<Funcionario> = ArrayList()
+
+        if (sql.moveToFirst()) {
+            do {
+                val id = sql.getInt(sql.getColumnIndex("id"))
+                val nome = sql.getString(sql.getColumnIndex("nome"))
+                val cargo = sql.getString(sql.getColumnIndex("cargo"))
+                listaFuncionarios.add(Funcionario(id, nome, cargo))
+            } while (sql.moveToNext())
+        }
+        sql.close()
+        db.close()
+        return listaFuncionarios
     }
 
     fun verificarLogin(nome: String, senha: String): Funcionario? {

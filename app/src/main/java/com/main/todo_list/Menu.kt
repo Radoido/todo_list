@@ -39,13 +39,16 @@ class Menu : AppCompatActivity() {
             binding.btnCadCliente.setOnClickListener {
                 val intent = Intent(this, CreateCliente::class.java)
                 startActivity(intent)
-                finish()
             }
 
             binding.btnCadLivro.setOnClickListener {
                 val intent = Intent(this, CreateLivro::class.java)
                 startActivity(intent)
-                finish()
+            }
+
+            binding.btnCadFuncionario.setOnClickListener {
+                val intent = Intent(this, CreateFuncionario::class.java)
+                startActivity(intent)
             }
 
             binding.btnListaAluguel.setOnClickListener {
@@ -56,7 +59,6 @@ class Menu : AppCompatActivity() {
             binding.btnLivro.setOnClickListener {
                 val intent = Intent(this, Aluguel::class.java)
                 startActivity(intent)
-                finish()
             }
 
         } else if (tipo == "Bibliotecário") {
@@ -71,7 +73,6 @@ class Menu : AppCompatActivity() {
             binding.btnLivro.setOnClickListener {
                 val intent = Intent(this, Aluguel::class.java)
                 startActivity(intent)
-                finish()
             }
         }
 

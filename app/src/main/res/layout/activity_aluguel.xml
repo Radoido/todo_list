@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="20dp"
             android:hint="Cliente"/>
 
         <ListView
@@ -53,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="20dp"
             android:hint="Titulo"/>
 
         <ListView
@@ -103,7 +105,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Livros alugados"/>
+            android:text="Livros alugados"
+            android:textSize="20dp"/>
         <ListView
             android:id="@+id/listAlugados"
             android:layout_width="wrap_content"

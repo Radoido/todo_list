@@ -45,7 +45,23 @@ class ListaAluguel : AppCompatActivity() {
         btnAlugados.setOnClickListener {
             carregarLivros("alugados")
         }
+
+
+        binding.listLivros.setOnItemClickListener { _, _, position, _ ->
+            val livroSelecionado = listaLivros[position]
+
+
+            val intent = Intent(this, LivroDetalhes::class.java).apply {
+                putExtra("id", livroSelecionado.id)
+                putExtra("titulo", livroSelecionado.titulo) ?: "Titulo não encontrado"
+                putExtra("autor", livroSelecionado.autor) ?: "Autor não encontrado"
+                putExtra("imgUri", livroSelecionado.imgUri) // Passa o URI da imagem
+            }
+
+            startActivity(intent)
+        }
     }
+
 
     // Função para carregar os livros por filtro
     private fun carregarLivros(filtro: String) {

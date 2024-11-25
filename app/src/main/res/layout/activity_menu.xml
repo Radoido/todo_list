@@ -31,8 +31,6 @@
     </LinearLayout>
 
 
-
-
     <LinearLayout
         android:id="@+id/linearMenu"
         android:layout_width="match_parent"
@@ -73,6 +71,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Gerenciar livro" />
+
+        <Button
+            android:id="@+id/btnCadFuncionario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gerenciar funcionário" />
+
+
 
     </LinearLayout>
 

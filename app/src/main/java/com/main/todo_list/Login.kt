@@ -20,7 +20,7 @@ class Login : AppCompatActivity() {
 
         val db = DAO(this)
         binding.btnLogin.setOnClickListener {
-            val nome = binding.editTextNome.text.toString()
+            val nome = binding.editTextNome.text.toString().trim()
             val senha = binding.editTextSenha.text.toString()
 
             if (nome.isNotBlank() && senha.isNotBlank()) {
