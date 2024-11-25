@@ -42,6 +42,8 @@ class Aluguel : AppCompatActivity() {
         binding.searchLivro.setOnItemClickListener { _, _, position, _ ->
             livroSelecionado = adapterLivro.getItem(position)
             binding.editBuscaTitulo.setText(livroSelecionado?.titulo)
+            binding.txtLivro.text = "Qual livro sera alugado?"
+
         }
 
         adapterAlugado = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaAlugados)
@@ -50,6 +52,7 @@ class Aluguel : AppCompatActivity() {
         binding.listAlugados.setOnItemClickListener { _, _, position, _ ->
             devolucaoSelecionada = adapterAlugado.getItem(position)
             binding.editBuscaTitulo.setText(devolucaoSelecionada?.titulo)
+            binding.txtLivro.text = "Devolver livro: "
         }
 
 
@@ -64,9 +67,13 @@ class Aluguel : AppCompatActivity() {
                 db.atualizarStatusLivro(idLivro, 1)
                 Toast.makeText(this, "Livro alugado com sucesso!", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, Menu::class.java)
-                startActivity(intent)
-                finish()
+                listaLivros.clear()
+                listaAlugados.clear()
+                listaLivros.addAll(db.livrosDisponiveis())
+                listaAlugados.addAll(db.livrosAlugados())
+                adapterAlugado.notifyDataSetChanged()
+                adapterLivro.notifyDataSetChanged()
+
             } else {
                 Toast.makeText(this, "Por favor, selecione um cliente e um livro.", Toast.LENGTH_SHORT).show()
             }

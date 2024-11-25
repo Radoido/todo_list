@@ -2,6 +2,7 @@ package com.main.todo_list
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -22,19 +23,19 @@ class CreateFuncionario : AppCompatActivity() {
         setContentView(binding.createFuncionario)
 
         val db = DAO(this)
-        val listaFuncionarios = db.mostrarTodosFuncionarios()
+        var listaFuncionarios = db.mostrarTodosFuncionarios()
 
 
         adapterFunci = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaFuncionarios)
-        binding.listFuncionario.adapter = adapterFunci
 
         binding.listFuncionario.setOnItemClickListener { _, _, position, _ ->
             binding.editNome.setText(listaFuncionarios[position].nome)
             binding.editSenha.setText(listaFuncionarios[position].senha)
             binding.editCargo.setText(listaFuncionarios[position].cargo)
             binding.txtId.text = "ID: ${listaFuncionarios[position].id}"
-        }
+            Log.i("funcionario", "os funcionarios: $db.mostrarTodosFuncionarios()")
 
+        }
         binding.btnSalvar.setOnClickListener {
             val nome = binding.editNome.text.toString().trim()
             val senha = binding.editSenha.text.toString().trim()
@@ -75,9 +76,10 @@ class CreateFuncionario : AppCompatActivity() {
             } else {
                 // Chama a função de atualização passando os valores
                 val resultado = db.funcionarioUpdate(id, nome, cargo, senha)
+                listaFuncionarios.clear()
 
                 if (resultado > 0) {
-                    listaFuncionarios[p] = Funcionario(id, nome, cargo)
+                    listaFuncionarios = db.mostrarTodosFuncionarios()
                     adapterFunci.notifyDataSetChanged()
 
                     Toast.makeText(this, "Funcionario atualizado com sucesso!", Toast.LENGTH_SHORT)

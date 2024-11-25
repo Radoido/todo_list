@@ -358,6 +358,25 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
         return listaFuncionarios
     }
 
+    fun mostrarTodosFuncionariosEdit(): ArrayList<Funcionario> {
+        val db = readableDatabase
+        val sql = db.rawQuery("SELECT * FROM funcionario", null)
+        val listaFuncionarios: ArrayList<Funcionario> = ArrayList()
+
+        if (sql.moveToFirst()) {
+            do {
+                val id = sql.getInt(sql.getColumnIndex("id"))
+                val nome = sql.getString(sql.getColumnIndex("nome"))
+                val cargo = sql.getString(sql.getColumnIndex("cargo"))
+                val senha = sql.getString(sql.getColumnIndex("senha"))
+                listaFuncionarios.add(Funcionario(id, nome, cargo))
+            } while (sql.moveToNext())
+        }
+        sql.close()
+        db.close()
+        return listaFuncionarios
+    }
+
     fun verificarLogin(nome: String, senha: String): Funcionario? {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM funcionario WHERE nome = ? AND senha = ?", arrayOf(nome, senha))

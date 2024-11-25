@@ -31,7 +31,7 @@ class CreateLivro : AppCompatActivity() {
 
 
         val db = DAO(this)
-        val listaLivros = db.mostrarTodosLivros()
+        var listaLivros = db.mostrarTodosLivros()
 
 
         adapterLivro = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaLivros)
@@ -58,8 +58,8 @@ class CreateLivro : AppCompatActivity() {
                 binding.editTitulo.setText("")
                 binding.editAutor.setText("")
                 binding.txtId.text = "ID: "
+                binding.btnImagem.setImageResource(R.drawable.placeholder)
                 Toast.makeText(this, "Livro inserido com sucesso!", Toast.LENGTH_SHORT).show()
-
             } else {
                 Toast.makeText(this, "Insira o titulo e autor do livro", Toast.LENGTH_SHORT).show()
             }
@@ -85,9 +85,13 @@ class CreateLivro : AppCompatActivity() {
                 val resultado = db.livroUpdate(id, titulo, autor, imgUri)
 
                 if (resultado > 0) {
-                    listaLivros[p] = Livro(id, titulo, autor)
+                    listaLivros.clear()
+                    listaLivros = db.mostrarTodosLivros()
                     adapterLivro.notifyDataSetChanged()
-
+                    binding.editTitulo.setText("")
+                    binding.editAutor.setText("")
+                    binding.txtId.text = "ID: "
+                    binding.btnImagem.setImageResource(R.drawable.placeholder)
                     Toast.makeText(this, "Livro atualizado com sucesso!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Erro ao atualizar o livro", Toast.LENGTH_SHORT).show()
@@ -113,9 +117,9 @@ class CreateLivro : AppCompatActivity() {
             checkMediaPermission { selectedUri ->
                 if (selectedUri != null) {
                     binding.btnImagem.setImageURI(selectedUri)
-                    println("Imagem salva em: $selectedUri")
+                    //println("Imagem salva em: $selectedUri")
                 } else {
-                    println("Nenhuma imagem foi selecionada.")
+                   // println("Nenhuma imagem foi selecionada.")
 
                 }
             }
@@ -185,7 +189,7 @@ class CreateLivro : AppCompatActivity() {
                 }
             }
 
-            Toast.makeText(this, "Imagem salva com sucesso!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_SHORT).show()
             imgUri = Uri.fromFile(newFile)  // Salva a URI da imagem para referência futura
 
         } catch (e: Exception) {
