@@ -1,7 +1,6 @@
 package com.main.todo_list
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -13,8 +12,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.main.todo_list.databinding.ActivityLivroDetalhesBinding
 import java.io.File
 import java.io.FileOutputStream
@@ -31,11 +28,10 @@ class LivroDetalhes : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.livroDetalhes)
 
-        Log.i("LivroDetalhes", "infos: ${intent.getIntExtra("id", -1)}")
         val livroId = intent.getIntExtra("id", -1)
         if (livroId != -1) {
             val db = DAO(this)
-            val livro = db.buscarLivroPorId(livroId) // Implemente esta função no DAO
+            val livro = db.buscarLivroPorId(livroId)
 
             livro?.let {
                 val titulo = intent.getStringExtra("titulo")
@@ -48,14 +44,15 @@ class LivroDetalhes : AppCompatActivity() {
                 if (!imgUri.isNullOrEmpty()) {
                     binding.imgLivro.setImageURI(Uri.parse(imgUri))
                 } else {
-                    binding.imgLivro.setImageResource(R.drawable.paceholder) // Placeholder caso não haja imagem
+                    binding.imgLivro.setImageResource(R.drawable.placeholder) // Placeholder caso não haja imagem
                 }
 
 
-
+/*
                 binding.imgLivro.setOnClickListener {
                     checkMediaPermission { selectedUri ->
                         if (selectedUri != null) {
+                            db.atualizarImagemLivro(livroId, selectedUri.toString())
                             binding.imgLivro.setImageURI(selectedUri)
                             println("Imagem salva em: $selectedUri")
                             db.atualizarImagemLivro(livroId, selectedUri.toString())
@@ -64,12 +61,15 @@ class LivroDetalhes : AppCompatActivity() {
                         }
                     }
                 }
+*/
+
 
                 binding.btnCancelar.setOnClickListener {
                     val intent = Intent(this, ListaAluguel::class.java)
                     startActivity(intent)
                     finish()
                 }
+
             }
         }
     }

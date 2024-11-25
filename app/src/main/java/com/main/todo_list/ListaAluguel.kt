@@ -60,6 +60,11 @@ class ListaAluguel : AppCompatActivity() {
 
             startActivity(intent)
         }
+
+        binding.btnCancelar.setOnClickListener {
+            val intent = Intent(this, Menu::class.java)
+            startActivity(intent)
+        }
     }
 
 

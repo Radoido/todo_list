@@ -9,14 +9,13 @@
     android:layout_height="match_parent"
     tools:context=".ListaAluguel">
 
-    <!-- activity_filtrar_livros.xml -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp">
 
-        <!-- Filtros de Livro -->
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -33,6 +32,7 @@
                 android:id="@+id/btnDisponiveis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
                 android:text="Disponíveis" />
 
             <Button
@@ -42,13 +42,21 @@
                 android:text="Alugados" />
         </LinearLayout>
 
-        <!-- ListView para exibir os livros -->
         <ListView
             android:id="@+id/listLivros"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voltar"/>
+
     </LinearLayout>
+
+
 
 
 

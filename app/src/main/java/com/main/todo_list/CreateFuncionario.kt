@@ -12,7 +12,8 @@ import com.main.todo_list.databinding.ActivityCreateFuncionarioBinding
 
 class CreateFuncionario : AppCompatActivity() {
     private lateinit var binding: ActivityCreateFuncionarioBinding
-    private lateinit var adapter: ArrayAdapter<Funcionario>
+    private lateinit var adapterFunci: ArrayAdapter<Funcionario>
+    private var p = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityCreateFuncionarioBinding.inflate(layoutInflater)
@@ -24,27 +25,28 @@ class CreateFuncionario : AppCompatActivity() {
         val listaFuncionarios = db.mostrarTodosFuncionarios()
 
 
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaFuncionarios)
-        binding.listFuncionario.adapter = adapter
+        adapterFunci = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaFuncionarios)
+        binding.listFuncionario.adapter = adapterFunci
 
         binding.listFuncionario.setOnItemClickListener { _, _, position, _ ->
             binding.editNome.setText(listaFuncionarios[position].nome)
-            binding.editCargo.setText(listaFuncionarios[position].cargo)
             binding.editSenha.setText(listaFuncionarios[position].senha)
+            binding.editCargo.setText(listaFuncionarios[position].cargo)
             binding.txtId.text = "ID: ${listaFuncionarios[position].id}"
         }
 
         binding.btnSalvar.setOnClickListener {
-            val nome = binding.editNome.text.toString()
-            val senha = binding.editSenha.text.toString()
-            val cargo = binding.editCargo.text.toString()
+            val nome = binding.editNome.text.toString().trim()
+            val senha = binding.editSenha.text.toString().trim()
+            val cargo = binding.editCargo.text.toString().trim()
             val resultado = db.funcionarioInsert(nome, senha, cargo)
 
             if (resultado > 0) {
                 listaFuncionarios.add(Funcionario(resultado.toInt(),nome, senha, cargo))
-                adapter.notifyDataSetChanged()
+                adapterFunci.notifyDataSetChanged()
                 binding.editNome.setText("")
                 binding.editCargo.setText("")
+                binding.editSenha.setText("")
                 binding.txtId.text = "ID: "
 
             } else {
@@ -55,16 +57,16 @@ class CreateFuncionario : AppCompatActivity() {
         binding.btnEditar.setOnClickListener() {
             val idString = binding.txtId.text.toString()
             val id = idString.substringAfter("ID: ").toIntOrNull()
-            val nome = binding.editNome.text.toString()
-            val cargo = binding.editCargo.text.toString()
-            val senha = binding.editSenha.text.toString()
+            val nome = binding.editNome.text.toString().trim()
+            val cargo = binding.editCargo.text.toString().trim()
+            val senha = binding.editSenha.text.toString().trim()
 
             if (id == null) {
                 Toast.makeText(this, "Selecione um funcionario para editar", Toast.LENGTH_SHORT).show()
             } else if (nome.isBlank() || cargo.isBlank()) {
                 Toast.makeText(this, "Nome e email não podem estar vazios", Toast.LENGTH_SHORT)
                     .show()
-            } else if (nome == listaFuncionarios[id].nome && cargo == listaFuncionarios[id].cargo && senha == listaFuncionarios[id].senha) {
+            } else if (nome == listaFuncionarios[p].nome && cargo == listaFuncionarios[p].cargo && senha == listaFuncionarios[id].senha) {
                 Toast.makeText(
                     this,
                     "Altere as informações que deseja atualizar!",
@@ -75,8 +77,8 @@ class CreateFuncionario : AppCompatActivity() {
                 val resultado = db.funcionarioUpdate(id, nome, cargo, senha)
 
                 if (resultado > 0) {
-                    listaFuncionarios[id] = Funcionario(id, nome, cargo)
-                    adapter.notifyDataSetChanged()
+                    listaFuncionarios[p] = Funcionario(id, nome, cargo)
+                    adapterFunci.notifyDataSetChanged()
 
                     Toast.makeText(this, "Funcionario atualizado com sucesso!", Toast.LENGTH_SHORT)
                         .show()
@@ -84,6 +86,9 @@ class CreateFuncionario : AppCompatActivity() {
                     Toast.makeText(this, "Erro ao atualizar o funcionario", Toast.LENGTH_SHORT).show()
                 }
             }
+            listaFuncionarios.clear()
+            listaFuncionarios.addAll(db.mostrarTodosFuncionarios())
+            adapterFunci.notifyDataSetChanged()
         }
 
         binding.btnExcluir.setOnClickListener {
@@ -91,6 +96,9 @@ class CreateFuncionario : AppCompatActivity() {
             val id = idString.substringAfter("ID: ").toIntOrNull()
             val nome = binding.editNome.text.toString()
             db.funcionarioDelete(id!!)
+            listaFuncionarios.clear()
+            listaFuncionarios.addAll(db.mostrarTodosFuncionarios())
+            adapterFunci.notifyDataSetChanged()
             Toast.makeText(this, "O funcionario $nome foi excluido com sucesso!", Toast.LENGTH_SHORT)
                 .show()
         }

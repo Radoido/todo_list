@@ -15,7 +15,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
         private const val TABLE_LIVRO = "livro"
         private const val TABLE_CLIENTE = "cliente"
         private const val TABLE_ALUGUEL = "aluguel"
-        private const val TABLE_FUNCIONARIOS = "funcionarios"
+        private const val TABLE_FUNCIONARIO = "funcionario"
     }
 
     private val createTables = arrayOf(
@@ -49,7 +49,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
         """.trimIndent(),
 
         """
-        CREATE TABLE $TABLE_FUNCIONARIOS (
+        CREATE TABLE $TABLE_FUNCIONARIO (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             senha TEXT NOT NULL,
@@ -59,7 +59,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
     )
 
     private val insertAdmin = """
-        INSERT INTO $TABLE_FUNCIONARIOS (nome, senha, cargo)
+        INSERT INTO $TABLE_FUNCIONARIO (nome, senha, cargo)
         VALUES ('admin', 'admin', 'Admin')
     """.trimIndent()
 
@@ -75,7 +75,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
             "DROP TABLE IF EXISTS $TABLE_ALUGUEL",
             "DROP TABLE IF EXISTS $TABLE_CLIENTE",
             "DROP TABLE IF EXISTS $TABLE_LIVRO",
-            "DROP TABLE IF EXISTS $TABLE_FUNCIONARIOS"
+            "DROP TABLE IF EXISTS $TABLE_FUNCIONARIO"
         )
 
         dropTables.forEach {
@@ -104,8 +104,8 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
     fun clienteUpdate(id: Int ,nome: String, email: String) : Int {
         val db = writableDatabase
         val contentValues = ContentValues()
-        contentValues.put("titulo", nome)
-        contentValues.put("autor", email)
+        contentValues.put("nome", nome)
+        contentValues.put("email", email)
         val resultado = db.update("cliente", contentValues, "id = ?", arrayOf(id.toString()))
         db.close()
         return resultado
@@ -249,7 +249,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
     fun atualizarImagemLivro(id: Int, novaUri: String) {
         val dao = writableDatabase
         val values = ContentValues().apply {
-            put("img_uri", novaUri)
+            put("imgUri", novaUri)
         }
         dao.update("livro", values, "id = ?", arrayOf(id.toString()))
     }
@@ -317,7 +317,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
         values.put("senha", senha)
         values.put("cargo", cargo)
 
-        val resultado = db.insert("funcionarios", null, values)
+        val resultado = db.insert("funcionario", null, values)
         db.close()
         return resultado
     }
@@ -342,7 +342,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
 
     fun mostrarTodosFuncionarios(): ArrayList<Funcionario> {
         val db = readableDatabase
-        val sql = db.rawQuery("SELECT id, nome, cargo FROM funcionarios", null)
+        val sql = db.rawQuery("SELECT * FROM funcionario", null)
         val listaFuncionarios: ArrayList<Funcionario> = ArrayList()
 
         if (sql.moveToFirst()) {
@@ -360,7 +360,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
 
     fun verificarLogin(nome: String, senha: String): Funcionario? {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM funcionarios WHERE nome = ? AND senha = ?", arrayOf(nome, senha))
+        val cursor = db.rawQuery("SELECT * FROM funcionario WHERE nome = ? AND senha = ?", arrayOf(nome, senha))
 
         return if (cursor.moveToFirst()) {
             val id = cursor.getInt(cursor.getColumnIndex("id"))

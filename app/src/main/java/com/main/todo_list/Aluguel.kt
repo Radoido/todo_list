@@ -16,8 +16,6 @@ class Aluguel : AppCompatActivity() {
         private var livroSelecionado: Livro? = null
         private var devolucaoSelecionada: Livro? = null
 
-        private var p: Int = -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)

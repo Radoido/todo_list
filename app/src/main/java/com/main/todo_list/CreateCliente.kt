@@ -13,7 +13,7 @@ import com.main.todo_list.databinding.ActivityCreateClienteBinding
 
 class CreateCliente : AppCompatActivity() {
     private lateinit var binding: ActivityCreateClienteBinding
-    private lateinit var adapter: ArrayAdapter<Cliente>
+    private lateinit var adapterCliente: ArrayAdapter<Cliente>
     private var p: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +26,8 @@ class CreateCliente : AppCompatActivity() {
         val listaClientes = db.mostrarTodosClientes()
 
 
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaClientes)
-        binding.listCliente.adapter = adapter
+        adapterCliente = ArrayAdapter(this, android.R.layout.simple_list_item_1, listaClientes)
+        binding.listCliente.adapter = adapterCliente
 
         binding.listCliente.setOnItemClickListener { _, _, position, _ ->
             binding.editNome.setText(listaClientes[position].nome)
@@ -43,7 +43,7 @@ class CreateCliente : AppCompatActivity() {
 
             if (resultado > 0) {
                 listaClientes.add(Cliente(resultado.toInt(), nome, email))
-                adapter.notifyDataSetChanged()
+                adapterCliente.notifyDataSetChanged()
                 binding.editNome.setText("")
                 binding.editEmail.setText("")
                 binding.txtId.text = "ID: "
@@ -63,15 +63,15 @@ class CreateCliente : AppCompatActivity() {
                 Toast.makeText(this, "Selecione um cliente para editar", Toast.LENGTH_SHORT).show()
             } else if (nome.isBlank() || email.isBlank()) {
                 Toast.makeText(this, "Nome e email não podem estar vazios", Toast.LENGTH_SHORT).show()
-            } else if (nome == listaClientes[id].nome && email == listaClientes[id].email) {
+            } else if (nome == listaClientes[p].nome && email == listaClientes[p].email) {
                 Toast.makeText(this, "Altere as informações que deseja atualizar!", Toast.LENGTH_SHORT).show()
             } else {
                 // Chama a função de atualização passando os valores
                 val resultado = db.clienteUpdate(id, nome, email)
 
                 if (resultado > 0) {
-                    listaClientes[id] = Cliente(id,nome, email)
-                    adapter.notifyDataSetChanged()
+                    listaClientes[p] = Cliente(id,nome, email)
+                    adapterCliente.notifyDataSetChanged()
 
                     Toast.makeText(this, "Cliente atualizado com sucesso!", Toast.LENGTH_SHORT).show()
                 } else {
@@ -85,6 +85,9 @@ class CreateCliente : AppCompatActivity() {
             val id = idString.substringAfter("ID: ").toIntOrNull()
             val nome = binding.editNome.text.toString()
             db.clienteDelete(id!!)
+            listaClientes.clear()
+            listaClientes.addAll(db.mostrarTodosClientes())
+            adapterCliente.notifyDataSetChanged()
             Toast.makeText(this, "O cliente $nome foi excluido com sucesso!", Toast.LENGTH_SHORT).show()
         }
 

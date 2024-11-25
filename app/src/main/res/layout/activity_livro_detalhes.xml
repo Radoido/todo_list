@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="vertical">
 
         <ImageView
@@ -24,14 +25,16 @@
             android:id="@+id/txtTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="35dp"
+            android:gravity="center"
+            android:textSize="35sp"
             android:hint="titulo"/>
 
         <TextView
             android:id="@+id/txtAutor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25dp"
+            android:gravity="center"
+            android:textSize="25sp"
             android:hint="autor"/>
 
 
