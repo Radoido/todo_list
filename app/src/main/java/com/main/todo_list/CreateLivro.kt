@@ -25,6 +25,7 @@ class CreateLivro : AppCompatActivity() {
     private var imgUri: Uri? = null
     private var titulo: String? = null
     private var author: String? = null
+    private var onImageSelected: ((Uri?) -> Unit)? = null
 
     private val PICK_IMAGE_REQUEST = 1
     private val REQUEST_MEDIA_PERMISSION = 1001
@@ -98,6 +99,14 @@ class CreateLivro : AppCompatActivity() {
         }
 
         binding.btnImg.setOnClickListener {
+            checkMediaPermission { selectedUri ->
+                if (selectedUri != null) {
+                    binding.btnImg.setImageURI(selectedUri)
+                    println("Imagem salva em: $selectedUri")
+                } else {
+                    println("Nenhuma imagem foi selecionada.")
+                }
+            }
             checkMediaPermission()
         }
 
@@ -124,8 +133,10 @@ class CreateLivro : AppCompatActivity() {
         }
     }
 
-    private fun checkMediaPermission() {
+    private fun checkMediaPermission(onImageReady: (Uri?) -> Unit)  {
         // Verifica se a permissão necessária foi concedida
+        onImageSelected = onImageReady  // Armazena o callback
+
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
         } else {
@@ -141,6 +152,8 @@ class CreateLivro : AppCompatActivity() {
 
     private fun openImagePicker() {
         imagePickerLauncher.launch("image/*")  // Abre a galeria para selecionar imagens
+        uri?.let { handleImageUri(it) }
+        onImageSelected?.invoke(imgUri)
     }
 
     private fun handleImageUri(uri: Uri) {
