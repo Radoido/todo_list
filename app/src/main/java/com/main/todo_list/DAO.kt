@@ -24,7 +24,8 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             titulo TEXT NOT NULL,
             autor TEXT NOT NULL,
-            alugado INTEGER DEFAULT 0
+            alugado INTEGER DEFAULT 0,
+            imgUri TEXT
         )
         """.trimIndent(),
 
@@ -135,7 +136,8 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
     }
 
     //Funções CRUD livros
-    fun livroInsert(titulo: String, autor: String): Long {
+
+    fun livroInsert(titulo: String, autor: String, imgUri: String): Long {
         if (titulo.isBlank() || autor.isBlank()) {
             return -1
         }
@@ -144,6 +146,7 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
         val contentValues = ContentValues()
         contentValues.put("titulo", titulo)
         contentValues.put("autor", autor)
+        contentValues.put("imgUri", imgUri)
 
         val resultado = db.insert("livro", null, contentValues)
         db.close()
@@ -152,11 +155,12 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
     }
 
 
-    fun livroUpdate(id: Int ,titulo: String, autor: String) : Int {
+    fun livroUpdate(id: Int ,titulo: String, autor: String, imgUri: String? = "" ) : Int {
         val db = writableDatabase
         val contentValues = ContentValues()
         contentValues.put("titulo", titulo)
         contentValues.put("autor", autor)
+        contentValues.put("imgUri", imgUri)
         val resultado = db.update("livro", contentValues, "id = ?", arrayOf(id.toString()))
         db.close()
         return resultado
@@ -175,11 +179,13 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
         val listaLivros: ArrayList<Livro> = ArrayList()
         if (sql.moveToFirst()) {
             do {
-                val id = sql.getInt(sql.getColumnIndex("id")) // Obtém o valor da coluna "id"
-                val titulo = sql.getString(sql.getColumnIndex("titulo")) // Obtém o valor da coluna "titulo"
-                val autor = sql.getString(sql.getColumnIndex("autor")) // Obtém o valor da coluna "autor"
+                val id = sql.getInt(sql.getColumnIndex("id"))
+                val titulo = sql.getString(sql.getColumnIndex("titulo"))
+                val autor = sql.getString(sql.getColumnIndex("autor"))
+                val alugado = sql.getInt(sql.getColumnIndex("alugado"))
+                val imgUri = sql.getString(sql.getColumnIndex("imgUri"))
 
-                listaLivros.add(Livro(id, titulo, autor)) // Adiciona à lista
+                listaLivros.add(Livro(id, titulo, autor, alugado, imgUri)) // Adiciona à lista
             } while (sql.moveToNext())
         }
         db.close()// Fecha o banco
@@ -199,7 +205,8 @@ class DAO(context: Context) : SQLiteOpenHelper(context, "biblioteca.db", null, 1
                 listaLivros.add(Livro(id, titulo, autor))
             } while (sql.moveToNext())
         }
-
+        sql.close()
+        db.close()
         return listaLivros
     }
 

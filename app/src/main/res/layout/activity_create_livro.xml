@@ -25,6 +25,24 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnImg"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:text="+"/>
+
+        <ImageButton
+            android:id="@+id/btnImagem"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,7 +93,7 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -86,20 +104,25 @@
 
         <Button
             android:id="@+id/btnSalvar"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Salvar" />
 
         <Button
             android:id="@+id/btnEditar"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
             android:text="Editar"/>
 
         <Button
+            android:id="@+id/btnExcluir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Excluir"/>
+
+        <Button
             android:id="@+id/btnCancelar"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancelar"/>
 
