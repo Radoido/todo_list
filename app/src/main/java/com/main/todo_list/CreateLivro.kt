@@ -97,9 +97,7 @@ class CreateLivro : AppCompatActivity() {
                     Toast.makeText(this, "Erro ao atualizar o livro", Toast.LENGTH_SHORT).show()
                 }
             }
-            listaLivros.clear()
-            listaLivros.addAll(db.mostrarTodosLivros())
-            adapterLivro.notifyDataSetChanged()
+            
         }
 
         binding.btnExcluir.setOnClickListener{
